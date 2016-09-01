@@ -34,6 +34,21 @@
 	// So that I can collect money from the customer
 	describe('Accept Coins', function(){
 
+		it('should accept a nickel as a valid coin when inserted', function () {
+			vendingMachine.insertCoin(nickel);
+			expect(vendingMachine.getTotal()).toBe(nickel.value);
+		});
+
+		it('should accept a dime as a valid coin when inserted', function(){
+			vendingMachine.insertCoin(dime);
+			expect(vendingMachine.getTotal()).toBe(dime.value);
+		});
+
+		it('should accept a quarter as a valid coin when inserted', function(){
+			vendingMachine.insertCoin(quarter);
+			expect(vendingMachine.getTotal()).toBe(quarter.value);
+		});
+
 	});
 
 	// As a vendor
