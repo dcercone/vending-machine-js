@@ -70,4 +70,4 @@
 	describe('Exact Change Only', function(){
 
 	});
-});
+})();
