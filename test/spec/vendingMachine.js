@@ -49,6 +49,18 @@
 			expect(vendingMachine.getTotal()).toBe(quarter.value);
 		});
 
+		it('should not accept a cent', function () {
+			vendingMachine.insertCoin(cent);
+			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
+			expect(vendingMachine.checkCoinReturn()).toBe(cent);
+		});
+
+		it('should not accept a half dollar', function () {
+			vendingMachine.insertCoin(halfDollar);
+			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
+			expect(vendingMachine.checkCoinReturn()).toBe(halfDollar);
+		});
+
 	});
 
 	// As a vendor

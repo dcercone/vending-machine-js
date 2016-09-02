@@ -7,6 +7,7 @@ function VendingMachine (){
 	};
 
 	this.total = 0;
+	this.coinReturn = 0;
 }
 
 VendingMachine.prototype = {
@@ -26,6 +27,11 @@ VendingMachine.prototype = {
 		return this.total.toFixed(2);
 	},
 	insertCoin: function(coin){
+
+		if (!this.isValidCoin(coin)){
+			this.returnCoin(coin);
+			return coin;
+		}
 
 		var value = 0;
 
@@ -54,5 +60,11 @@ VendingMachine.prototype = {
 		}
 
 		return false;
-	}
+	},
+	checkCoinReturn: function(){
+		return this.coinReturn;
+	},
+	returnCoin: function(coin){
+		this.coinReturn = coin;
+	},
 }
