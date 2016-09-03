@@ -68,6 +68,21 @@
 	// So that I can give them an incentive to put money in the machine
 	describe('Select Product', function(){
 
+		it('should check for enough money', function () {
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.insertCoin(quarter);
+			expect(vendingMachine.getTotal()).toBe((0.75).toFixed(2));
+			vendingMachine.makeSelection('cola');
+			expect(vendingMachine.getStatus()).toBe("PRICE $1.00");
+			vendingMachine.insertCoin(quarter);
+			expect(vendingMachine.getTotal()).toBe((1.00).toFixed(2));
+			vendingMachine.makeSelection('cola');
+			expect(vendingMachine.getStatus()).toBe("THANK YOU");
+			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
+			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
+		});
+
 	});
 
 	// As a vendor
