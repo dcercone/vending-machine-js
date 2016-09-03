@@ -79,6 +79,10 @@ VendingMachine.prototype = {
 				}
 				break;
 
+			case this.STATES.SOLD_OUT:
+				this.status = "SOLD OUT";
+				break;
+
 			default:
 				this.status = this.getTotal();
 				break;
@@ -142,22 +146,30 @@ VendingMachine.prototype = {
 		if (selection){
 
 			var item = this.products[selection];
-			var coinTotal = this.total;
-			var price = item.price;
 
-			if (coinTotal == price){
-				item.quantity--;
-				this.setStatus(this.STATES.THANKYOU);
-				this.setTotal(0);
-			}
-			else if (coinTotal > price){
-				this.setStatus(this.STATES.THANKYOU);
-				this.coinReturn = coinTotal - price;
-				this.setTotal(0);
-			}
-			else if (coinTotal < price){
-				this.setStatus(this.STATES.PRICE);
-				this.selectionPrice = price;
+			if (item.quantity > 0){
+
+				var coinTotal = this.total;
+				var price = item.price;
+
+				if (coinTotal == price){
+					item.quantity--;
+					this.setStatus(this.STATES.THANKYOU);
+					this.setTotal(0);
+				}
+				else if (coinTotal > price){
+					item.quantity--;
+					this.coinReturn = coinTotal - price;
+					this.setTotal(0);
+				}
+				else if (coinTotal < price){
+					this.setStatus(this.STATES.PRICE);
+					this.selectionPrice = price;
+				}
+			} else {
+
+				this.setStatus(this.STATES.SOLD_OUT);
+
 			}
 
 		}

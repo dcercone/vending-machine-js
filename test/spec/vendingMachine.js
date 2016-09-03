@@ -83,6 +83,13 @@
 			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
 		});
 
+		it('should notify when more money is needed', function () {
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.makeSelection('cola');
+			expect(vendingMachine.getStatus()).toBe("PRICE $1.00");
+			expect(vendingMachine.getStatus()).toBe(quarter.value);
+		});
+
 	});
 
 	// As a vendor
@@ -103,6 +110,20 @@
 	// I want to be told when the item I have selected is not available
 	// So that I can select another item
 	describe('Sold Out', function(){
+
+		it('should notify when an item is sold out', function(){
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.makeSelection('chips');
+			expect(vendingMachine.getStatus()).toBe("THANK YOU");
+			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
+
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.makeSelection('chips');
+			expect(vendingMachine.getStatus()).toBe("SOLD OUT");
+			expect(vendingMachine.getStatus()).toBe("0.50");
+		});
 
 	});
 
