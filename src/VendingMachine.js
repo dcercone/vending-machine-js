@@ -104,7 +104,7 @@ VendingMachine.prototype = {
 	insertCoin: function(coin){
 
 		if (!this.isValidCoin(coin)){
-			this.returnCoin(coin);
+			this.coinReturn = coin.value;
 			return coin;
 		}
 
@@ -125,6 +125,7 @@ VendingMachine.prototype = {
 		}
 
 		this.setTotal(value);
+		this.setStatus(this.getTotal());
 
 	},
 	isValidCoin: function(coin){
@@ -138,9 +139,6 @@ VendingMachine.prototype = {
 	},
 	checkCoinReturn: function(){
 		return this.coinReturn;
-	},
-	returnCoin: function(coin){
-		this.coinReturn = coin;
 	},
 	makeSelection: function(selection){
 		if (selection){
@@ -159,7 +157,8 @@ VendingMachine.prototype = {
 				}
 				else if (coinTotal > price){
 					item.quantity--;
-					this.coinReturn = coinTotal - price;
+					this.coinReturn = (coinTotal - price).toFixed(2);
+					this.setStatus(this.STATES.THANKYOU);
 					this.setTotal(0);
 				}
 				else if (coinTotal < price){
