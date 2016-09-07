@@ -52,13 +52,13 @@
 		it('should not accept a cent', function () {
 			vendingMachine.insertCoin(cent);
 			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
-			expect(vendingMachine.checkCoinReturn()).toBe(cent);
+			expect(vendingMachine.checkCoinReturn()).toBe(cent.value);
 		});
 
 		it('should not accept a half dollar', function () {
 			vendingMachine.insertCoin(halfDollar);
 			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
-			expect(vendingMachine.checkCoinReturn()).toBe(halfDollar);
+			expect(vendingMachine.checkCoinReturn()).toBe(halfDollar.value);
 		});
 
 	});
@@ -97,6 +97,26 @@
 	// So that they will use the vending machine again
 	describe('Make Change', function(){
 
+		it('should return coins over the amount of the item', function(){
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.insertCoin(quarter);
+			expect(vendingMachine.getStatus()).toBe("0.75");
+			vendingMachine.makeSelection('candy');
+			expect(vendingMachine.getStatus()).toBe("THANK YOU");
+			expect(vendingMachine.checkCoinReturn()).toBe(dime.value);
+			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
+
+			vendingMachine.insertCoin(nickel);
+			vendingMachine.insertCoin(quarter);
+			vendingMachine.insertCoin(quarter);
+			expect(vendingMachine.getStatus()).toBe("0.55");
+			vendingMachine.makeSelection('chips');
+			expect(vendingMachine.getStatus()).toBe("THANK YOU");
+			expect(vendingMachine.checkCoinReturn()).toBe(nickel.value);
+			expect(vendingMachine.getStatus()).toBe("INSERT COIN");			
+
+		});
 	});
 
 	// As a customer
