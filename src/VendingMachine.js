@@ -140,6 +140,16 @@ VendingMachine.prototype = {
 	checkCoinReturn: function(){
 		return this.coinReturn;
 	},
+	returnCoins: function(){
+		if (this.getTotal() > 0){
+			var currentTotal = this.getTotal();
+			this.setTotal(0);
+			this.setStatus(this.STATES.INSERT);
+			return currentTotal;
+		}
+
+		return this.getTotal();
+	},
 	makeSelection: function(selection){
 		if (selection){
 

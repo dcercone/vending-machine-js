@@ -124,6 +124,16 @@
 	// So that I can change my mind about buying stuff from the vending machine
 	describe('Return Coins', function(){
 
+		it('should return coins when the return coin button is pressed', function(){
+			vendingMachine.insertCoin(nickel);
+			vendingMachine.insertCoin(dime);
+			vendingMachine.insertCoin(quarter);
+			expect(vendingMachine.getStatus()).toBe("0.40");
+			expect(vendingMachine.returnCoins()).toBe("0.40");
+			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
+			expect(vendingMachine.getTotal()).toBe("0.00");
+		});
+
 	});
 
 	// As a customer
