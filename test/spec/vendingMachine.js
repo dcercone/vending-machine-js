@@ -129,6 +129,7 @@
 			vendingMachine.insertCoin(dime);
 			vendingMachine.insertCoin(quarter);
 			expect(vendingMachine.returnCoins()).toEqual([nickel, dime, quarter]);
+			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
 		});
 
 	});

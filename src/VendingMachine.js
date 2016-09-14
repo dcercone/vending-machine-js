@@ -145,6 +145,8 @@ VendingMachine.prototype = {
 	returnCoins: function(){
 		var coins = this.insertedCoins.slice();
 		this.insertedCoins.length = 0;
+		this.setTotal(0);
+		this.setStatus(this.STATES.INSERT);
 		return coins;
 	},
 	makeSelection: function(selection){
