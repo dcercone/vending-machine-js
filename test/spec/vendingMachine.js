@@ -128,10 +128,9 @@
 			vendingMachine.insertCoin(nickel);
 			vendingMachine.insertCoin(dime);
 			vendingMachine.insertCoin(quarter);
-			expect(vendingMachine.getStatus()).toBe("0.40");
-			expect(vendingMachine.returnCoins()).toBe("0.40");
+			expect(vendingMachine.returnCoins()).toEqual([nickel, dime, quarter]);
+			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
 			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
-			expect(vendingMachine.getTotal()).toBe("0.00");
 		});
 
 	});
