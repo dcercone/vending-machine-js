@@ -8,23 +8,23 @@
 
 		cent = new Coin();
 		cent.weight = 0;
-		cent.value = (.01).toFixed(2);
+		cent.value = 0.01;
 
 		nickel = new Coin();
 		nickel.weight = 1;
-		nickel.value = (.05).toFixed(2);
+		nickel.value = 0.05;
 
 		dime = new Coin();
 		dime.weight = 2;
-		dime.value = (.1).toFixed(2);
+		dime.value = 0.10;
 
 		quarter = new Coin();
 		quarter.weight = 3;
-		quarter.value = (.25).toFixed(2);
+		quarter.value = 0.25;
 
 		halfDollar = new Coin();
 		halfDollar.weight = 4;
-		halfDollar.value = (.5).toFixed(2);
+		halfDollar.value = 0.50;
 
 		vendingMachine = new VendingMachine();
 	});
@@ -51,13 +51,13 @@
 
 		it('should not accept a cent', function () {
 			vendingMachine.insertCoin(cent);
-			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
+			expect(vendingMachine.getTotal()).toBe(0);
 			expect(vendingMachine.checkCoinReturn()).toBe(cent.value);
 		});
 
 		it('should not accept a half dollar', function () {
 			vendingMachine.insertCoin(halfDollar);
-			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
+			expect(vendingMachine.getTotal()).toBe(0);
 			expect(vendingMachine.checkCoinReturn()).toBe(halfDollar.value);
 		});
 
@@ -72,15 +72,15 @@
 			vendingMachine.insertCoin(quarter);
 			vendingMachine.insertCoin(quarter);
 			vendingMachine.insertCoin(quarter);
-			expect(vendingMachine.getTotal()).toBe((0.75).toFixed(2));
+			expect(vendingMachine.getTotal()).toBe(0.75);
 			vendingMachine.makeSelection('cola');
 			expect(vendingMachine.getStatus()).toBe("PRICE $1.00");
 			vendingMachine.insertCoin(quarter);
-			expect(vendingMachine.getTotal()).toBe((1.00).toFixed(2));
+			expect(vendingMachine.getTotal()).toBe(1);
 			vendingMachine.makeSelection('cola');
 			expect(vendingMachine.getStatus()).toBe("THANK YOU");
 			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
-			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
+			expect(vendingMachine.getTotal()).toBe(0);
 		});
 
 		it('should notify when more money is needed', function () {
@@ -101,7 +101,7 @@
 			vendingMachine.insertCoin(quarter);
 			vendingMachine.insertCoin(quarter);
 			vendingMachine.insertCoin(quarter);
-			expect(vendingMachine.getStatus()).toBe("0.75");
+			expect(vendingMachine.getStatus()).toBe(0.75);
 			vendingMachine.makeSelection('candy');
 			expect(vendingMachine.getStatus()).toBe("THANK YOU");
 			expect(vendingMachine.checkCoinReturn()).toBe(dime.value);
@@ -110,7 +110,7 @@
 			vendingMachine.insertCoin(nickel);
 			vendingMachine.insertCoin(quarter);
 			vendingMachine.insertCoin(quarter);
-			expect(vendingMachine.getStatus()).toBe("0.55");
+			expect(vendingMachine.getStatus()).toBe(0.55);
 			vendingMachine.makeSelection('chips');
 			expect(vendingMachine.getStatus()).toBe("THANK YOU");
 			expect(vendingMachine.checkCoinReturn()).toBe(nickel.value);
@@ -129,7 +129,7 @@
 			vendingMachine.insertCoin(dime);
 			vendingMachine.insertCoin(quarter);
 			expect(vendingMachine.returnCoins()).toEqual([nickel, dime, quarter]);
-			expect(vendingMachine.getTotal()).toBe((0).toFixed(2));
+			expect(vendingMachine.getTotal()).toBe(0);
 			expect(vendingMachine.getStatus()).toBe("INSERT COIN");
 		});
 
@@ -151,7 +151,7 @@
 			vendingMachine.insertCoin(quarter);
 			vendingMachine.makeSelection('chips');
 			expect(vendingMachine.getStatus()).toBe("SOLD OUT");
-			expect(vendingMachine.getStatus()).toBe("0.50");
+			expect(vendingMachine.getStatus()).toBe(0.50);
 		});
 
 	});
