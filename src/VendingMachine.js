@@ -1,9 +1,9 @@
 function VendingMachine (){
 
 	this.COINS = {
-		NICKEL: {weight: 1, value: .05},
-		DIME: {weight: 2, value: .10},
-		QUARTER: {weight: 3, value: .25}
+		NICKEL: {weight: 1, value: 5},
+		DIME: {weight: 2, value: 10},
+		QUARTER: {weight: 3, value: 25}
 	};
 
 	this.STATES = {
@@ -16,15 +16,15 @@ function VendingMachine (){
 
 	this.products = {
 		cola: {
-			price: 1.00,
+			price: 100,
 			quantity: 10
 		},
 		chips: {
-			price: 0.50,
+			price: 50,
 			quantity: 1
 		},
 		candy: {
-			price: 0.65,
+			price: 65,
 			quantity: 3
 		}
 	};
@@ -33,23 +33,29 @@ function VendingMachine (){
 	this.coinReturn = 0;
 	this.selectionPrice = 0;
 	this.insertedCoins = [];
+	this.acceptedCoins = [this.COINS.NICKEL, this.COINS.DIME, this.COINS.QUARTER];
+	this.bankedCoins = this.acceptedCoins.map(function(item){
+		return {coin: item, count: 0};
+	});
 }
 
 VendingMachine.prototype = {
 
-	setTotal: function(value){
+	setTotal: function(){
 
-		value = value || 0;
+		var total = 0;
 
-		if (value == 0){
-			this.total = value;
+		if (this.insertedCoins.length > 0){
+			for(var coin in this.insertedCoins){
+				total += (this.insertedCoins[coin].value * 100);
+			}
 		}
-		else {
-			this.total += value;
-		}
+
+		this.total = total;
 	},
 	getTotal: function(){
-		return this.total.toFixed(2);
+		var value = this.total * .01;
+		return value;
 	},
 	setStatus: function(status){
 
@@ -88,46 +94,28 @@ VendingMachine.prototype = {
 				this.status = this.getTotal();
 				break;
 		}
-
-
 	},
 	getStatus: function(){
 		currentStatus = this.status;
 		this.setStatus(this.STATES.INSERT);
 		if (currentStatus == "PRICE"){
-			currentStatus = currentStatus + " $" + this.getSelectionPrice();		
+			currentStatus = currentStatus + " $" + this.getSelectionPrice().toPrecision(3);		
 		}
 		return currentStatus;
 	},
 	getSelectionPrice: function(){
-		return this.selectionPrice.toFixed(2);
+		return this.selectionPrice * .01;
 	},
 	insertCoin: function(coin){
 
 		if (!this.isValidCoin(coin)){
-			this.coinReturn = coin.value;
+			this.coinReturn = (coin.value * 100);
 			return coin;
 		}
 
-		var value = 0;
-
-		switch(coin.weight){
-			case this.COINS.NICKEL.weight:
-			value = this.COINS.NICKEL.value;
-			break;
-
-			case this.COINS.DIME.weight:
-			value = this.COINS.DIME.value;
-			break;
-
-			case this.COINS.QUARTER.weight:
-			value = this.COINS.QUARTER.value;
-			break;
-		}
-
-		this.setTotal(value);
-		this.setStatus(this.getTotal());
 		this.insertedCoins.push(coin);
+		this.setTotal();
+		this.setStatus(this.getTotal());
 
 	},
 	isValidCoin: function(coin){
@@ -140,16 +128,17 @@ VendingMachine.prototype = {
 		return false;
 	},
 	checkCoinReturn: function(){
-		return this.coinReturn;
+		return this.coinReturn * .01;
 	},
 	returnCoins: function(){
 		var coins = this.insertedCoins.slice();
-		this.insertedCoins.length = 0;
-		this.setTotal(0);
+		this.insertedCoins = [];
+		this.setTotal();
 		this.setStatus(this.STATES.INSERT);
 		return coins;
 	},
 	makeSelection: function(selection){
+
 		if (selection){
 
 			var item = this.products[selection];
@@ -162,13 +151,13 @@ VendingMachine.prototype = {
 				if (coinTotal == price){
 					item.quantity--;
 					this.setStatus(this.STATES.THANKYOU);
-					this.setTotal(0);
+					this.bankCoins();
 				}
 				else if (coinTotal > price){
 					item.quantity--;
-					this.coinReturn = (coinTotal - price).toFixed(2);
+					this.coinReturn = (coinTotal - price);
 					this.setStatus(this.STATES.THANKYOU);
-					this.setTotal(0);
+					this.bankCoins();
 				}
 				else if (coinTotal < price){
 					this.setStatus(this.STATES.PRICE);
@@ -181,5 +170,15 @@ VendingMachine.prototype = {
 			}
 
 		}
+	},
+	bankCoins: function(){
+		for(var coin in this.insertedCoins){
+			var coinIndex = this.acceptedCoins.indexOf(coin);
+			if (coinIndex != -1){
+				this.bankedCoins[coinIndex].count++;
+			}
+		}
+		this.insertedCoins = [];
+		this.setTotal();
 	}
 }
