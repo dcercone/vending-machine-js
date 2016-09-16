@@ -1,4 +1,3 @@
-function Coin(){
-	var weight;
-	var size;
+function Coin(weight){
+	this.weight = weight;
 }

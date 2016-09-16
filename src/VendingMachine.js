@@ -37,6 +37,7 @@ function VendingMachine (){
 	this.bankedCoins = this.acceptedCoins.map(function(item){
 		return {coin: item, count: 0};
 	});
+	this.setStatus();
 }
 
 VendingMachine.prototype = {
@@ -47,21 +48,24 @@ VendingMachine.prototype = {
 
 		if (this.insertedCoins.length > 0){
 			for(var coin in this.insertedCoins){
-				total += (this.insertedCoins[coin].value * 100);
+				total += this.insertedCoins[coin].value;
 			}
 		}
 
 		this.total = total;
 	},
 	getTotal: function(){
-		var value = this.total * .01;
-		return value;
+		return this.convertCoinValue(this.total);
 	},
 	setStatus: function(status){
 
 		if ((!status) && (this.total == 0)){
 			status = this.STATES.INSERT;
 		}
+
+		// if (!this.hasBankedCoins()) {
+		// 	status = this.STATES.EXACT_CHANGE;
+		// }
 
 		switch (status) {
 			case this.STATES.PRICE:
@@ -90,6 +94,10 @@ VendingMachine.prototype = {
 				this.status = "SOLD OUT";
 				break;
 
+			// case this.STATES.EXACT_CHANGE:
+			// 	this.status = "EXACT CHANGE ONLY";
+			// 	break;
+
 			default:
 				this.status = this.getTotal();
 				break;
@@ -104,16 +112,20 @@ VendingMachine.prototype = {
 		return currentStatus;
 	},
 	getSelectionPrice: function(){
-		return this.selectionPrice * .01;
+	
+		return this.convertCoinValue(this.selectionPrice);
 	},
 	insertCoin: function(coin){
 
 		if (!this.isValidCoin(coin)){
-			this.coinReturn = (coin.value * 100);
+			this.coinReturn = coin;
 			return coin;
 		}
 
-		this.insertedCoins.push(coin);
+		var insertedCoin = new Coin(coin.weight);
+		insertedCoin.value = coin.value;
+		insertedCoin.value = this.convertCoinValue(insertedCoin.value);
+		this.insertedCoins.push(insertedCoin);
 		this.setTotal();
 		this.setStatus(this.getTotal());
 
@@ -127,10 +139,33 @@ VendingMachine.prototype = {
 
 		return false;
 	},
+	convertCoinValue: function(value){
+
+		if (value) {
+
+			if (value % 1 == 0){
+				value = value * .01;
+			}
+			else {
+				value = value * 100;
+			}
+
+			return value;
+		}
+
+		return 0;
+
+	},
 	checkCoinReturn: function(){
-		return this.coinReturn * .01;
+		return this.coinReturn.value;
 	},
 	returnCoins: function(){
+
+		for(var index in this.insertedCoins){
+			var coin = this.insertedCoins[index];
+			coin.value = this.convertCoinValue(coin.value);
+		}
+
 		var coins = this.insertedCoins.slice();
 		this.insertedCoins = [];
 		this.setTotal();
@@ -147,6 +182,7 @@ VendingMachine.prototype = {
 
 				var coinTotal = this.total;
 				var price = item.price;
+			
 
 				if (coinTotal == price){
 					item.quantity--;
@@ -172,13 +208,50 @@ VendingMachine.prototype = {
 		}
 	},
 	bankCoins: function(){
+	
 		for(var coin in this.insertedCoins){
-			var coinIndex = this.acceptedCoins.indexOf(coin);
+			var coinIndex = this.arrayIndexOfCoin(this.acceptedCoins, this.insertedCoins[coin].value, "value");
+		
 			if (coinIndex != -1){
 				this.bankedCoins[coinIndex].count++;
+			
 			}
 		}
 		this.insertedCoins = [];
 		this.setTotal();
+	},
+	hasBankedCoins: function(){
+
+		var coinCount = 0;
+		for(var coin in this.bankedCoins){
+			coinCount += this.bankedCoins[coin].count;
+		}
+
+		if (coinCount > 0){
+		
+		}
+
+	
+		return false;
+	},
+	makeChange: function(){
+
+		// get the total coins entered by the user
+		var amountInput = this.getTotal();
+	
+
+		// get the amount of the item purchased
+	
+
+
+	},
+	arrayIndexOfCoin: function(array, searchTerm, property){
+	
+		for(var index in array){
+		
+			if (array[index][property] === searchTerm) return index;
+		}
+
+		return -1;
 	}
 }
